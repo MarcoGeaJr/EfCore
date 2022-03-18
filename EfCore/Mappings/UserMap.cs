@@ -1,6 +1,7 @@
 ﻿using Blog.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Collections.Generic;
 
 namespace EfCore.Mappings
 {
@@ -61,6 +62,24 @@ namespace EfCore.Mappings
             #region [Index]
             builder.HasIndex(x => x.Slug, "IX_User_Slug")
                 .IsUnique();
+            #endregion
+
+            #region [Relationships]
+            builder.HasMany(x => x.Roles)
+                .WithMany(x => x.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserRole",
+                    user => user.HasOne<Role>()
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("FK_UserRole_UserId")
+                                .OnDelete(DeleteBehavior.Cascade),
+                    role => role.HasOne<User>()
+                                .WithMany()
+                                .HasForeignKey("RoleId")
+                                .HasConstraintName("FK_UserRole_RoleId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                );
             #endregion
         }
     }

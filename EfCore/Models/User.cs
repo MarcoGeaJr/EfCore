@@ -13,5 +13,6 @@ namespace Blog.Models
         public string Bio { get; set; }
 
         public List<Post> Posts { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }
